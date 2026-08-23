@@ -1,0 +1,136 @@
+﻿customer_state,category_pt,faturamento,ranking
+AC,Esporte e lazer,1677.46,1
+AC,Relógios e presentes,1389.6,2
+AC,Saúde e beleza,1386.58,3
+AC,Móveis e decoração,1316.44,4
+AC,Informática e acessórios,1238.5,5
+AL,Saúde e beleza,12681.26,1
+AL,Relógios e presentes,11605.02,2
+AL,Informática e acessórios,7605.61,3
+AL,Automotivo,4528.55,4
+AL,Telefonia,4434.16,5
+AM,Saúde e beleza,2776.03,1
+AM,Jardinagem,1980.88,2
+AM,Informática e acessórios,1815.74,3
+AM,Relógios e presentes,1755.35,4
+AM,Esporte e lazer,1362.6000000000001,5
+AP,Informática e acessórios,2050.0299999999997,1
+AP,Relógios e presentes,1639.8,2
+AP,Computadores,1437.0,3
+AP,Saúde e beleza,1380.58,4
+AP,Automotivo,1216.3899999999999,5
+BA,Saúde e beleza,49955.12,1
+BA,Relógios e presentes,45631.52,2
+BA,Esporte e lazer,37010.06,3
+BA,Informática e acessórios,32635.83,4
+BA,Automotivo,29112.71,5
+CE,Saúde e beleza,31454.5,1
+CE,Relógios e presentes,29025.35,2
+CE,Diversos,12005.41,3
+CE,Informática e acessórios,11551.97,4
+CE,Automotivo,11306.31,5
+DF,Relógios e presentes,31643.1,1
+DF,Saúde e beleza,29423.02,2
+DF,Informática e acessórios,23818.44,3
+DF,Esporte e lazer,22467.28,4
+DF,Automotivo,17258.54,5
+ES,Relógios e presentes,28074.0,1
+ES,"Cama, mesa e banho",22589.65,2
+ES,Esporte e lazer,20086.2,3
+ES,Saúde e beleza,19938.6,4
+ES,Informática e acessórios,14424.18,5
+GO,Relógios e presentes,31486.93,1
+GO,Saúde e beleza,27921.4,2
+GO,"Cama, mesa e banho",22285.61,3
+GO,Esporte e lazer,19186.65,4
+GO,Diversos,17492.22,5
+MA,Saúde e beleza,12668.279999999999,1
+MA,Informática e acessórios,12152.83,2
+MA,Relógios e presentes,9712.99,3
+MA,Esporte e lazer,8388.88,4
+MA,Diversos,7160.4,5
+MG,Saúde e beleza,153690.5,1
+MG,"Cama, mesa e banho",128590.59,2
+MG,Relógios e presentes,121622.03,3
+MG,Esporte e lazer,109799.82,4
+MG,Informática e acessórios,108933.49,5
+MS,Saúde e beleza,11231.58,1
+MS,Utilidades domésticas,10861.74,2
+MS,Informática e acessórios,9738.8,3
+MS,Esporte e lazer,9097.19,4
+MS,Automotivo,7142.65,5
+MT,Saúde e beleza,15241.8,1
+MT,Relógios e presentes,15006.91,2
+MT,Automotivo,10087.42,3
+MT,Informática e acessórios,8873.15,4
+MT,Jardinagem,7848.58,5
+PA,Saúde e beleza,23545.84,1
+PA,Relógios e presentes,21635.82,2
+PA,Esporte e lazer,12298.65,3
+PA,Informática e acessórios,11391.41,4
+PA,Bebê,9882.75,5
+PB,Saúde e beleza,15692.08,1
+PB,Relógios e presentes,13102.98,2
+PB,Informática e acessórios,7195.08,3
+PB,Computadores,7128.0,4
+PB,Jardinagem,5590.01,5
+PE,Saúde e beleza,40609.11,1
+PE,Relógios e presentes,30894.88,2
+PE,Esporte e lazer,17446.61,3
+PE,Diversos,14245.52,4
+PE,Informática e acessórios,12907.91,5
+PI,Automotivo,10017.38,1
+PI,Saúde e beleza,9995.199999999999,2
+PI,Relógios e presentes,7736.18,3
+PI,Esporte e lazer,5525.79,4
+PI,Informática e acessórios,4978.0199999999995,5
+PR,Esporte e lazer,57634.4,1
+PR,Relógios e presentes,57287.2,2
+PR,Saúde e beleza,53402.57,3
+PR,Móveis e decoração,48171.82,4
+PR,"Cama, mesa e banho",45177.38,5
+RJ,Relógios e presentes,173496.01,1
+RJ,"Cama, mesa e banho",144191.89,2
+RJ,Saúde e beleza,139537.66,3
+RJ,Esporte e lazer,119793.11,4
+RJ,Informática e acessórios,117060.86,5
+RN,Saúde e beleza,13728.98,1
+RN,Relógios e presentes,10052.42,2
+RN,Telefonia,5303.29,3
+RN,Esporte e lazer,4101.37,4
+RN,Automotivo,4060.62,5
+RO,Saúde e beleza,7085.76,1
+RO,Relógios e presentes,4428.27,2
+RO,Esporte e lazer,3212.88,3
+RO,Brinquedos,3079.05,4
+RO,Computadores,2499.9,5
+RR,Esporte e lazer,1350.6,1
+RR,Eletrodomésticos,954.1800000000001,2
+RR,Bebê,949.9,3
+RR,"Cama, mesa e banho",609.6999999999999,4
+RR,Móveis e decoração,518.1,5
+RS,"Cama, mesa e banho",60040.950000000004,1
+RS,Móveis e decoração,53436.92,2
+RS,Informática e acessórios,52345.04,3
+RS,Esporte e lazer,51048.63,4
+RS,Saúde e beleza,50596.19,5
+SC,Esporte e lazer,41579.03,1
+SC,Saúde e beleza,38921.05,2
+SC,Informática e acessórios,36058.43,3
+SC,Relógios e presentes,33230.33,4
+SC,Móveis e decoração,31061.26,5
+SE,Saúde e beleza,8396.67,1
+SE,Diversos,5686.67,2
+SE,Móveis e decoração,4165.49,3
+SE,Informática e acessórios,3891.3500000000004,4
+SE,Jardinagem,3318.63,5
+SP,"Cama, mesa e banho",472208.17,1
+SP,Saúde e beleza,453027.14,2
+SP,Relógios e presentes,420605.7,3
+SP,Esporte e lazer,374785.39,4
+SP,Informática e acessórios,340798.18,5
+TO,Esporte e lazer,5144.32,1
+TO,Relógios e presentes,4920.89,2
+TO,Saúde e beleza,4798.99,3
+TO,Informática e acessórios,4147.219999999999,4
+TO,Diversos,3429.41,5

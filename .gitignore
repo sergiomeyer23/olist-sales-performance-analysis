@@ -1,0 +1,22 @@
+# Ambiente virtual
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Cache de dados processados (gerado por src/data_loader.py)
+data_processed/
+
+# As saídas em outputs/ são versionadas de propósito: as figuras aparecem
+# no README e as tabelas servem de resumo executivo do projeto.
+
+# Sistema operacional / editores
+.DS_Store
+.vscode/
+.idea/

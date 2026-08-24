@@ -191,15 +191,3 @@ Granularidade final: **uma linha = um item vendido e entregue** (109.872 linhas)
 `Python 3.11` · `Pandas` · `NumPy` · `Plotly` · `Streamlit` · `PyArrow` · `Pytest`
 
 ---
-
-## 📈 Possíveis próximos passos
-
-- Análise **RFM** e coortes de retenção de clientes
-- Modelo de **previsão de atraso** na entrega (classificação)
-- Previsão de demanda por categoria (séries temporais)
-- Deploy do dashboard no Streamlit Community Cloud
-
----
-
-Projeto de portfólio em análise de dados por
-[@sergiomeyer23](https://github.com/sergiomeyer23).

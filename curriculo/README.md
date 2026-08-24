@@ -20,13 +20,11 @@ pip install reportlab
 python curriculo/gerar_pdf.py
 ```
 
-## Antes de enviar: preencher os campos pendentes
+## Dados pessoais
 
-Estes marcadores precisam ser substituídos em `gerar_pdf.py`:
+Os dados pessoais já estão preenchidos em `gerar_pdf.py`. Ao mudar de contato,
+curso ou telefone, edite as constantes `CONTATO` e `FORMACAO` e regere o PDF.
 
-- `[SEU E-MAIL]`
-- `[SEU TELEFONE COM DDD]`
-- `[NOME DO CURSO]` / `[NOME DA INSTITUIÇÃO]` / `[MÊS/ANO]`
 
 ## Decisões tomadas para compatibilidade com ATS
 

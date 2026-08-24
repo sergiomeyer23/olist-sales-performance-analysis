@@ -3,7 +3,7 @@
 ## Analista de Dados | Python | Pandas | SQL | Excel
 
 Cascavel, Paraná, Brasil
-[SEU E-MAIL] | [SEU TELEFONE COM DDD]
+sergio.gabriel.meyer10@gmail.com | (45) 99909-9340
 linkedin.com/in/sérgio-meyer-7aaa45407 | github.com/sergiomeyer23
 
 ---
@@ -16,8 +16,8 @@ completo de análise de e-commerce processando 96 mil pedidos e R$ 13,2 milhões
 vendas, integrando 9 bases de dados em uma tabela analítica e entregando um dashboard
 interativo em Streamlit com 6 painéis e 17 visualizações. Aplico Python, pandas, SQL,
 Excel e visualização de dados para transformar dados brutos em indicadores de negócio
-e recomendações acionáveis. Cursando Ensino Superior na área de tecnologia e em busca
-da primeira oportunidade como Analista de Dados Júnior.
+e recomendações acionáveis. Cursando Tecnologia em Análise e Desenvolvimento de Sistemas na UNIVEL
+e em busca da primeira oportunidade como Analista de Dados Júnior.
 
 ---
 
@@ -101,8 +101,8 @@ API REST para gestão de finanças pessoais, com modelagem de dados relacional.
 
 ## FORMAÇÃO ACADÊMICA
 
-**[NOME DO CURSO]** — [NOME DA INSTITUIÇÃO]
-Cursando | Previsão de conclusão: [MÊS/ANO]
+**Tecnologia em Análise e Desenvolvimento de Sistemas** — UNIVEL
+Cursando | Previsão de conclusão: dezembro de 2029
 
 ---
 

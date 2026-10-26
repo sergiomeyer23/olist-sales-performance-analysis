@@ -1,7 +1,9 @@
 # 📦 Olist — Análise de Performance de Vendas
 
-Análise exploratória e **dashboard interativo** sobre 96 mil pedidos entregues do maior
-marketplace brasileiro (Olist), construídos com Python, Pandas, Plotly e Streamlit.
+Análise exploratória e **dashboard interativo** sobre 96 mil pedidos entregues do
+marketplace brasileiro Olist, construídos com Python, Pandas, Plotly e Streamlit.
+
+[![tests](https://github.com/sergiomeyer23/olist-sales-performance-analysis/actions/workflows/ci.yml/badge.svg)](https://github.com/sergiomeyer23/olist-sales-performance-analysis/actions/workflows/ci.yml)
 
 > **A pergunta central do projeto:** onde estão as alavancas de crescimento e de
 > satisfação de um marketplace com R$ 13,2 milhões em vendas?
@@ -15,7 +17,7 @@ marketplace brasileiro (Olist), construídos com Python, Pandas, Plotly e Stream
 | 1 | **Atraso na entrega derruba a avaliação** — o achado mais acionável da base | Nota **4,29** no prazo → **2,57** atrasado |
 | 2 | **Pareto real entre vendedores**: o topo não domina, mas o núcleo sim | **18%** dos vendedores geram **80%** da receita |
 | 3 | **Concentração geográfica extrema** no Sudeste | SP, RJ e MG = **63%** da receita |
-| 4 | **Custo de vender longe**: frete e prazo penalizam o Norte/Nordeste | Frete = **22,7%** do preço no Norte vs. 13,1% no Sudeste |
+| 4 | **Custo de vender longe**: frete e prazo penalizam o Norte/Nordeste | Frete = **22,7%** do preço no Norte vs. 13,1% no Sudeste (mesmo estado) |
 | 5 | **Parcelamento sustenta o ticket** | R$ 101 à vista → **R$ 333** em 7-10x |
 
 **A leitura de negócio:** logística é o produto. Só 8,1% dos pedidos atrasam, mas
@@ -76,7 +78,7 @@ Categorias abaixo da linha vendem muito e decepcionam — prioridade de melhoria
 **Móveis de escritório** (nota 3,52) e **cama, mesa e banho** (3,92) lideram esse
 grupo: itens volumosos, frete caro e maior risco de avaria.
 
-> As 17 figuras (PNG + HTML interativo) estão em [`outputs/figuras/`](outputs/figuras)
+> As 17 figuras em PNG e 18 em HTML interativo estão em [`outputs/figuras/`](outputs/figuras)
 > e as tabelas de resumo em [`outputs/tabelas/`](outputs/tabelas).
 
 ---
@@ -162,7 +164,7 @@ Decisões tomadas na limpeza (documentadas em `src/data_loader.py`):
 |---------|--------|
 | Só pedidos com status `delivered` | Cancelados e indisponíveis inflariam o faturamento sem receita real |
 | Recorte de **jan/2017 a ago/2018** | Os meses das pontas têm 1 a 4 pedidos e distorcem qualquer série temporal |
-| Uma avaliação por pedido (a mais recente) | 551 pedidos têm avaliação duplicada; sem tratar, o join multiplicaria as linhas |
+| Uma avaliação por pedido (a mais recente) | 551 pedidos têm avaliação duplicada; sem tratar, o join multiplicaria as linhas. As médias de nota são calculadas no grão de pedido, não de item |
 | Um meio de pagamento por pedido (o de maior valor) | Pedidos com voucher + cartão apareceriam duas vezes |
 | Produtos sem categoria → `uncategorized` | ~1,6k produtos; descartá-los tiraria receita real da análise |
 | Frete separado do faturamento | Faturamento = preço dos produtos; frete é analisado como custo logístico |
@@ -186,8 +188,27 @@ Granularidade final: **uma linha = um item vendido e entregue** (109.872 linhas)
 
 ---
 
+## ⚠️ Limitações
+
+- A análise cobre apenas pedidos **entregues** entre **jan/2017 e ago/2018**. Cancelados,
+  indisponíveis e o período de cauda curta ficaram de fora para não distorcer receita e série temporal.
+- Os dados são **observacionais**: atraso correlaciona com nota baixa, mas não prova
+  causalidade. O recorte também não controla preço, produto ou região simultaneamente.
+- As médias de nota são calculadas **no grão de pedido**. Um pedido com vários itens
+  conta uma vez; um pedido com itens de categorias diferentes conta em cada categoria.
+- Filtros muito restritivos no dashboard podem reduzir a amostra a poucas dezenas de
+  pedidos; nesses casos, leia o gráfico como exploratório, não como conclusão.
+- O dataset original é anonimizado e público; não há dados pessoais reais neste repositório.
+
+## 📄 Licença e dados
+
+- **Código:** [MIT](LICENSE).
+- **Dataset:** [Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)
+  (Kaggle), licença **CC BY-NC-SA 4.0**. Os CSVs em `dados/` são mantidos para
+  reprodutibilidade; as figuras e tabelas em `outputs/` foram geradas a partir deles.
+
 ## 🛠️ Tecnologias
 
-`Python 3.11` · `Pandas` · `NumPy` · `Plotly` · `Streamlit` · `PyArrow` · `Pytest`
+`Python 3.11+` · `Pandas` · `NumPy` · `Plotly` · `Streamlit` · `PyArrow` · `Pytest`
 
 ---

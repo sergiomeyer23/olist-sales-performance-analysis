@@ -1,6 +1,10 @@
 pandas>=2.0
 numpy>=1.24
 plotly>=5.18
-streamlit>=1.30
+streamlit>=1.49
 pyarrow>=14.0
-kaleido==0.2.1
+matplotlib>=3.8
+pytest>=8.0
+# kaleido>=1.0 requer Chrome/Chromium instalado para exportar PNG.
+# Alternativa: rode `plotly_get_chrome` uma vez após instalar.
+kaleido>=1.0

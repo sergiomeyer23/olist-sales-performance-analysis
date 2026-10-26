@@ -81,12 +81,8 @@ def clean_orders(orders: pd.DataFrame) -> pd.DataFrame:
 
 
 def clean_order_items(items: pd.DataFrame) -> pd.DataFrame:
-    """Remove itens com preço inválido e cria o valor total do item."""
-    df = items[items["price"] > 0].copy()
-    df["item_total"] = df["price"] + df["freight_value"]
-    # Peso do frete no valor pago pelo item — usado na análise de logística.
-    df["freight_ratio"] = df["freight_value"] / df["item_total"]
-    return df
+    """Remove itens com preço inválido e mantém frete separado do produto."""
+    return items[items["price"] > 0].copy()
 
 
 def clean_products(products: pd.DataFrame, categories: pd.DataFrame) -> pd.DataFrame:

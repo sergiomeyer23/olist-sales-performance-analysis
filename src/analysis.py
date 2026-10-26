@@ -14,6 +14,29 @@ import pandas as pd
 from src import config
 
 
+def _order_reviews(df: pd.DataFrame) -> pd.DataFrame:
+    """Uma nota por pedido (a limpeza já manteve a avaliação mais recente)."""
+    return (
+        df.drop_duplicates("order_id")[["order_id", "review_score"]]
+        .dropna(subset=["review_score"])
+    )
+
+
+def _review_by_key(df: pd.DataFrame, key: str) -> pd.Series:
+    """Nota média por categoria/vendedor/UF no grão de pedido.
+
+    Fazer ``mean`` direto na tabela de itens daria mais peso a pedidos com
+    muitos itens. Aqui cada pedido entra uma única vez por chave, que é a
+    leitura correta de "nota média do vendedor" ou "nota média da categoria".
+    """
+    pairs = df[["order_id", key]].drop_duplicates()
+    return (
+        pairs.merge(_order_reviews(df), on="order_id", how="inner")
+        .groupby(key)["review_score"]
+        .mean()
+    )
+
+
 # --------------------------------------------------------------------------- #
 # Visão geral
 # --------------------------------------------------------------------------- #
@@ -21,6 +44,7 @@ def kpi_summary(df: pd.DataFrame) -> dict[str, float]:
     """Indicadores de topo do dashboard."""
     orders = df["order_id"].nunique()
     revenue = df["price"].sum()
+    order_level = df.drop_duplicates("order_id")
 
     return {
         "faturamento": revenue,
@@ -29,9 +53,9 @@ def kpi_summary(df: pd.DataFrame) -> dict[str, float]:
         "ticket_medio": revenue / orders if orders else 0.0,
         "clientes_unicos": df["customer_unique_id"].nunique(),
         "vendedores_ativos": df["seller_id"].nunique(),
-        "nota_media": df["review_score"].mean(),
-        "prazo_medio_dias": df["delivery_days"].mean(),
-        "taxa_atraso": df.drop_duplicates("order_id")["is_late"].mean(),
+        "nota_media": order_level["review_score"].mean(),
+        "prazo_medio_dias": order_level["delivery_days"].mean(),
+        "taxa_atraso": order_level["is_late"].mean(),
         "frete_medio": df["freight_value"].mean(),
         "percentual_frete": df["freight_value"].sum() / (revenue + df["freight_value"].sum()),
     }
@@ -84,13 +108,13 @@ def top_categories(df: pd.DataFrame, top_n: int = 12) -> pd.DataFrame:
             faturamento=("price", "sum"),
             itens=("price", "size"),
             preco_medio=("price", "mean"),
-            nota_media=("review_score", "mean"),
             frete_medio=("freight_value", "mean"),
         )
         .reset_index()
         .sort_values("faturamento", ascending=False)
     )
 
+    grouped["nota_media"] = grouped["category_pt"].map(_review_by_key(df, "category_pt"))
     grouped["participacao"] = grouped["faturamento"] / grouped["faturamento"].sum()
     return grouped.head(top_n)
 
@@ -106,13 +130,13 @@ def category_matrix(df: pd.DataFrame, min_items: int = 300) -> pd.DataFrame:
         .agg(
             faturamento=("price", "sum"),
             itens=("price", "size"),
-            nota_media=("review_score", "mean"),
             preco_medio=("price", "mean"),
             taxa_atraso=("is_late", "mean"),
         )
         .reset_index()
     )
 
+    grouped["nota_media"] = grouped["category_pt"].map(_review_by_key(df, "category_pt"))
     return grouped[grouped["itens"] >= min_items].sort_values(
         "faturamento", ascending=False
     )
@@ -145,7 +169,6 @@ def seller_ranking(df: pd.DataFrame, top_n: int = 15) -> pd.DataFrame:
             faturamento=("price", "sum"),
             pedidos=("order_id", "nunique"),
             itens=("price", "size"),
-            nota_media=("review_score", "mean"),
             prazo_medio=("delivery_days", "mean"),
             taxa_atraso=("is_late", "mean"),
             estado=("seller_state", "first"),
@@ -155,6 +178,7 @@ def seller_ranking(df: pd.DataFrame, top_n: int = 15) -> pd.DataFrame:
         .sort_values("faturamento", ascending=False)
     )
 
+    grouped["nota_media"] = grouped["seller_id"].map(_review_by_key(df, "seller_id"))
     grouped["ticket_medio"] = grouped["faturamento"] / grouped["pedidos"]
     grouped["participacao"] = grouped["faturamento"] / grouped["faturamento"].sum()
     # Identificador curto para caber no eixo dos gráficos.
@@ -209,23 +233,25 @@ def revenue_by_state(df: pd.DataFrame) -> pd.DataFrame:
             faturamento=("price", "sum"),
             pedidos=("order_id", "nunique"),
             clientes=("customer_unique_id", "nunique"),
-            nota_media=("review_score", "mean"),
             prazo_medio=("delivery_days", "mean"),
             taxa_atraso=("is_late", "mean"),
             frete_medio=("freight_value", "mean"),
+            frete_total=("freight_value", "sum"),
         )
         .reset_index()
         .sort_values("faturamento", ascending=False)
     )
 
+    grouped["nota_media"] = grouped["customer_state"].map(
+        _review_by_key(df, "customer_state")
+    )
     grouped["ticket_medio"] = grouped["faturamento"] / grouped["pedidos"]
     grouped["participacao"] = grouped["faturamento"] / grouped["faturamento"].sum()
     grouped["participacao_acumulada"] = grouped["participacao"].cumsum()
     grouped["regiao"] = grouped["customer_state"].map(config.REGION_BY_STATE)
-    # Peso do frete sobre o preço: mostra o custo de vender longe do Sudeste.
-    grouped["frete_sobre_preco"] = grouped["frete_medio"] / (
-        grouped["faturamento"] / grouped["pedidos"]
-    )
+    # Frete total / preço total: mesma unidade, sem misturar item com pedido.
+    grouped["frete_sobre_preco"] = grouped["frete_total"] / grouped["faturamento"]
+    grouped = grouped.drop(columns="frete_total")
 
     return grouped
 
@@ -237,7 +263,6 @@ def revenue_by_region(df: pd.DataFrame) -> pd.DataFrame:
         .agg(
             faturamento=("price", "sum"),
             pedidos=("order_id", "nunique"),
-            nota_media=("review_score", "mean"),
             prazo_medio=("delivery_days", "mean"),
             frete_medio=("freight_value", "mean"),
         )
@@ -245,6 +270,9 @@ def revenue_by_region(df: pd.DataFrame) -> pd.DataFrame:
         .sort_values("faturamento", ascending=False)
     )
 
+    grouped["nota_media"] = grouped["customer_region"].map(
+        _review_by_key(df, "customer_region")
+    )
     grouped["participacao"] = grouped["faturamento"] / grouped["faturamento"].sum()
     return grouped
 
@@ -396,13 +424,16 @@ def freight_analysis(df: pd.DataFrame) -> pd.DataFrame:
         .agg(
             frete_medio=("freight_value", "mean"),
             preco_medio=("price", "mean"),
+            frete_total=("freight_value", "sum"),
+            preco_total=("price", "sum"),
             prazo_medio=("delivery_days", "mean"),
             itens=("price", "size"),
         )
         .reset_index()
     )
 
-    grouped["frete_sobre_preco"] = grouped["frete_medio"] / grouped["preco_medio"]
+    grouped["frete_sobre_preco"] = grouped["frete_total"] / grouped["preco_total"]
+    grouped = grouped.drop(columns=["frete_total", "preco_total"])
     grouped["tipo_venda"] = grouped["is_interstate"].map(
         {False: "Mesmo estado", True: "Interestadual"}
     )

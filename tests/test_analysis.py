@@ -1,8 +1,7 @@
 """Testes de sanidade das análises.
 
-Não testam "o número exato", e sim as regras que não podem quebrar quando o
-código muda: granularidade dos joins, faixas de valores plausíveis e
-coerência entre métricas. Rode com:
+Verificam as regras que não podem quebrar quando o código muda: granularidade
+dos joins, faixas de valores plausíveis e coerência entre métricas. Rode com:
 
     pytest -q
 """

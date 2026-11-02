@@ -4,8 +4,8 @@ Fluxo:
     CSVs brutos (dados/)  ->  limpeza  ->  tabela analítica única (1 linha = 1 item)
                                        ->  cache em Parquet (data_processed/)
 
-A tabela analítica é o "coração" do projeto: todas as análises partem dela,
-garantindo que faturamento, prazos e notas sejam sempre calculados do mesmo jeito.
+Todas as análises partem da tabela analítica, então faturamento, prazos e
+notas são sempre calculados do mesmo jeito.
 """
 
 from __future__ import annotations
@@ -97,7 +97,7 @@ def clean_products(products: pd.DataFrame, categories: pd.DataFrame) -> pd.DataF
 
     df = df.merge(categories, on="product_category_name", how="left")
 
-    # ~1,6k produtos não têm categoria: viram "sem_categoria" em vez de sumirem.
+    # ~1,6k produtos não têm categoria: viram "uncategorized" em vez de sumirem.
     df["product_category_name_english"] = df["product_category_name_english"].fillna(
         "uncategorized"
     )
@@ -107,7 +107,7 @@ def clean_products(products: pd.DataFrame, categories: pd.DataFrame) -> pd.DataF
         .fillna(df["product_category_name_english"].str.replace("_", " ").str.capitalize())
     )
 
-    # Volume da embalagem em litros — proxy de "produto grande" no estudo de frete.
+    # Volume da embalagem em litros, usado como proxy de "produto grande" no estudo de frete.
     df["product_volume_l"] = (
         df["product_length_cm"] * df["product_height_cm"] * df["product_width_cm"]
     ) / 1000

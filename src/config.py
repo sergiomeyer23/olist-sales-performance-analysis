@@ -1,7 +1,7 @@
-"""Central configuration: paths, business rules and display labels.
+"""Configuração central: caminhos, regras de negócio e rótulos de exibição.
 
-Manter constantes em um único lugar evita "números mágicos" espalhados
-pelo código e facilita mudar uma regra de negócio sem caçar strings.
+Com as constantes num só lugar, mudar uma regra de negócio não exige procurar
+o número pelo código.
 """
 
 from __future__ import annotations

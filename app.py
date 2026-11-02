@@ -60,9 +60,8 @@ def insight(text: str) -> None:
 def first_value(df: pd.DataFrame, mask: pd.Series, column: str, default=None):
     """Primeiro valor de uma coluna sob um filtro, ou ``default`` se não houver.
 
-    Necessário porque filtros muito restritivos podem gerar recortes sem
-    nenhum pedido atrasado (ou sem nenhum no prazo) — nesse caso o app deve
-    seguir funcionando em vez de quebrar.
+    Filtros muito restritivos podem gerar recortes sem nenhum pedido atrasado
+    (ou sem nenhum no prazo). Nesse caso o app segue funcionando em vez de quebrar.
     """
     subset = df.loc[mask, column]
     return subset.iloc[0] if len(subset) else default
@@ -74,7 +73,7 @@ df_full = load_dataset()
 # Sidebar: filtros globais
 # --------------------------------------------------------------------------- #
 st.sidebar.title("📦 Olist Analytics")
-st.sidebar.caption("Dados de e-commerce brasileiro | 2017–2018")
+st.sidebar.caption("Dados de e-commerce brasileiro | 2017 a 2018")
 st.sidebar.markdown("---")
 st.sidebar.subheader("Filtros")
 
@@ -128,7 +127,7 @@ if price_max < 1000:  # no máximo do slider, não cortamos a cauda de itens car
 st.sidebar.markdown("---")
 st.sidebar.metric("Itens no filtro", f"{len(df):,}".replace(",", "."))
 st.sidebar.caption(
-    "Base: pedidos **entregues** entre jan/2017 e ago/2018. "
+    "Base: pedidos entregues entre jan/2017 e ago/2018. "
     "Faturamento considera o preço dos produtos (frete analisado à parte)."
 )
 
@@ -139,7 +138,7 @@ if df.empty:
 # --------------------------------------------------------------------------- #
 # Cabeçalho e KPIs
 # --------------------------------------------------------------------------- #
-st.title("Performance de Vendas — Olist")
+st.title("Performance de vendas do Olist")
 st.caption(
     "Análise de 96 mil pedidos entregues do maior marketplace brasileiro. "
     "Use os filtros à esquerda para explorar por período, região e categoria."
@@ -188,9 +187,8 @@ with tab_overview:
 
     best_month = monthly.loc[monthly["faturamento"].idxmax()]
     insight(
-        f"<b>Sazonalidade clara.</b> O melhor mês foi "
-        f"<b>{best_month['order_month']:%b/%Y}</b> com "
-        f"R$ {best_month['faturamento']:,.0f} — efeito Black Friday. "
+        f"O melhor mês foi <b>{best_month['order_month']:%b/%Y}</b> com "
+        f"R$ {best_month['faturamento']:,.0f}, por causa da Black Friday. "
         "Novembro e janeiro puxam o pico; dezembro cai porque a entrega de Natal "
         "não chega a tempo e o cliente antecipa a compra."
     )
@@ -205,10 +203,9 @@ with tab_overview:
         )
 
     insight(
-        "<b>Janela de conversão.</b> As compras se concentram entre <b>10h e 22h de "
-        "segunda a sexta</b>, com o pico na segunda-feira à noite. Fim de semana "
-        "responde por bem menos pedidos — campanhas e disparos de e-mail rendem mais "
-        "no início da semana."
+        "As compras se concentram entre <b>10h e 22h de segunda a sexta</b>, com o "
+        "pico na segunda-feira à noite. O fim de semana responde por bem menos "
+        "pedidos, então campanhas e e-mails rendem mais no início da semana."
     )
 
     st.subheader("Resumo mensal")
@@ -251,10 +248,10 @@ with tab_products:
 
     leader = top_cat.iloc[0]
     insight(
-        f"<b>Portfólio pulverizado.</b> A líder — {leader['category_pt']} — representa "
-        f"apenas <b>{leader['participacao']:.1%}</b> do faturamento, e as 12 maiores "
-        f"somam {top_cat['participacao'].sum():.0%}. Não há dependência de uma única "
-        "categoria, o que reduz risco, mas também dilui o poder de negociação com fornecedores."
+        f"A categoria líder, {leader['category_pt']}, representa apenas "
+        f"<b>{leader['participacao']:.1%}</b> do faturamento, e as 12 maiores "
+        f"somam {top_cat['participacao'].sum():.0%}. Sem dependência de uma única "
+        "categoria o risco é menor, mas o poder de negociação com fornecedores também diminui."
     )
 
     top_states = (
@@ -266,7 +263,7 @@ with tab_products:
     )
 
     insight(
-        "<b>Gosto nacional homogêneo.</b> As mesmas categorias (saúde e beleza, "
+        "As mesmas categorias (saúde e beleza, "
         "cama/mesa/banho, relógios e presentes) lideram em praticamente todos os "
         "estados. Isso permite um sortimento padronizado no centro de distribuição, "
         "com ajustes finos por região em vez de catálogos regionais separados."
@@ -321,11 +318,11 @@ with tab_sellers:
         st.plotly_chart(plots.plot_pareto(an.market_concentration(df)), width="stretch")
 
     insight(
-        f"<b>Cauda longa, mas com Pareto.</b> Nenhum vendedor individual domina "
-        f"(os 10 maiores fazem {headline['share_top_10_vendedores']:.1%}), porém "
+        f"Nenhum vendedor domina sozinho "
+        f"(os 10 maiores fazem {headline['share_top_10_vendedores']:.1%}), mas "
         f"<b>{headline['percentual_vendedores_para_80pct']:.0%} dos vendedores geram 80% "
-        "da receita</b>. A gestão de contas deveria ser desenhada em dois trilhos: "
-        "atendimento dedicado para esse núcleo e automação/autoatendimento para a cauda."
+        "da receita</b>. A gestão de contas pode seguir dois trilhos: "
+        "atendimento dedicado para esse núcleo e automação ou autoatendimento para a cauda."
     )
 
     st.subheader("Ranking de vendedores")
@@ -381,10 +378,10 @@ with tab_geo:
 
     top3_share = states["participacao"].head(3).sum()
     insight(
-        f"<b>O Brasil do e-commerce é o Sudeste.</b> SP, RJ e MG concentram "
-        f"<b>{top3_share:.0%}</b> da receita. Nas regiões Norte e Nordeste o cliente "
-        "espera quase o dobro do tempo e paga um frete proporcionalmente muito maior — "
-        "um centro de distribuição no Nordeste atacaria simultaneamente prazo, frete e nota."
+        f"SP, RJ e MG concentram <b>{top3_share:.0%}</b> da receita. No Norte e no "
+        "Nordeste o cliente espera quase o dobro do tempo e paga um frete "
+        "proporcionalmente muito maior. Um centro de distribuição no Nordeste "
+        "atacaria prazo, frete e nota ao mesmo tempo."
     )
 
     st.subheader("Desempenho por estado")
@@ -433,15 +430,15 @@ with tab_delivery:
 
     if on_time is not None and delayed is not None:
         insight(
-            f"<b>Logística é o produto.</b> Pedidos entregues no prazo recebem nota média "
-            f"<b>{on_time:.2f}</b>; os atrasados, <b>{delayed:.2f}</b> — uma queda de "
+            f"Pedidos entregues no prazo recebem nota média <b>{on_time:.2f}</b>; "
+            f"os atrasados, <b>{delayed:.2f}</b>, uma queda de "
             f"{on_time - delayed:.2f} estrelas. Entre as entregas que passam de 30 dias, "
-            "quase dois terços viram nota 1. Prazo não é detalhe operacional: é o principal "
-            "driver de satisfação de toda a base."
+            "quase dois terços das avaliações são nota 1 ou 2. O prazo é o principal "
+            "fator de satisfação de toda a base."
         )
     else:
         insight(
-            "<b>Logística é o produto.</b> O recorte atual não tem pedidos nos dois "
+            "O recorte atual não tem pedidos nos dois "
             "grupos (no prazo e atrasado) para a comparação. Na base completa, atrasar "
             "custa 1,73 estrela: 4,29 no prazo contra 2,57 atrasado."
         )
@@ -469,10 +466,10 @@ with tab_delivery:
         )
 
     insight(
-        "<b>Crédito parcelado sustenta o ticket.</b> O cartão responde pela maior parte "
-        "dos pedidos e o ticket médio cresce junto com o número de parcelas — sinal de "
-        "que o parcelamento viabiliza a compra de itens mais caros. Reduzir o número "
-        "máximo de parcelas encolheria diretamente o ticket médio."
+        "O cartão responde pela maior parte dos pedidos e o ticket médio cresce com o "
+        "número de parcelas, o que indica que o parcelamento viabiliza a compra de "
+        "itens mais caros. Reduzir o máximo de parcelas encolheria diretamente o "
+        "ticket médio."
     )
 
 # --- Dados ------------------------------------------------------------------ #
@@ -480,16 +477,16 @@ with tab_data:
     st.subheader("Sobre a base")
     st.markdown(
         """
-        **Fonte:** [Brazilian E-Commerce Public Dataset by Olist (Kaggle)](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)
+        Fonte: [Brazilian E-Commerce Public Dataset by Olist (Kaggle)](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)
 
-        **Tratamentos aplicados** (ver `src/data_loader.py`):
-        - Apenas pedidos com status `delivered` — cancelados/indisponíveis inflariam a receita.
-        - Recorte de **jan/2017 a ago/2018**: os meses das pontas têm pouquíssimos pedidos
+        Tratamentos aplicados (ver `src/data_loader.py`):
+        - Apenas pedidos com status `delivered`, porque cancelados e indisponíveis inflariam a receita.
+        - Recorte de jan/2017 a ago/2018: os meses das pontas têm pouquíssimos pedidos
           e distorcem as séries temporais.
         - Uma avaliação por pedido (a mais recente) e um meio de pagamento principal
           (o de maior valor), evitando duplicar linhas nos joins.
         - Produtos sem categoria viram `uncategorized` em vez de serem descartados.
-        - Granularidade final: **uma linha por item vendido**.
+        - Granularidade final: uma linha por item vendido.
         """
     )
 
@@ -498,7 +495,7 @@ with tab_data:
     col_b.metric("Colunas", f"{df.shape[1]}")
     col_c.metric(
         "Período",
-        f"{df['order_date'].min():%m/%Y} – {df['order_date'].max():%m/%Y}",
+        f"{df['order_date'].min():%m/%Y} a {df['order_date'].max():%m/%Y}",
     )
 
     st.subheader("Amostra da tabela analítica")

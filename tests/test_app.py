@@ -1,6 +1,6 @@
 """Testes do dashboard usando o AppTest nativo do Streamlit.
 
-Executam o app de verdade (sem browser) e verificam que ele não quebra —
+Executam o app de verdade (sem browser) e verificam que ele não quebra,
 inclusive com filtros restritivos, que já causaram um IndexError quando um
 recorte não tinha nenhum pedido atrasado.
 """

@@ -62,7 +62,7 @@ def plot_monthly_revenue(monthly: pd.DataFrame) -> go.Figure:
         hovertemplate="%{x|%b/%Y}<br>R$ %{y:,.0f}<extra></extra>",
     )
 
-    # Black Friday de 2017 é o pico da base — vale destacar no gráfico.
+    # Black Friday de 2017 é o pico da base, então ganha destaque no gráfico.
     peak = monthly.loc[monthly["faturamento"].idxmax()]
     fig.add_annotation(
         x=peak["order_month"],
@@ -388,7 +388,7 @@ def plot_state_map_static(states: pd.DataFrame, coords: pd.DataFrame) -> go.Figu
 
     ``plot_state_map`` usa tiles do Mapbox e precisa de internet para desenhar
     o fundo. Esta versão plota apenas as UFs pelas suas coordenadas, então
-    renderiza offline — é a que exportamos como PNG para o README.
+    renderiza offline e é a que vai como PNG para o README.
     """
     data = states.merge(coords, on="customer_state", how="inner")
 

@@ -1,9 +1,8 @@
 """Funções de análise: cada uma responde a uma pergunta de negócio.
 
 Todas recebem a tabela analítica (ver ``src.data_loader``) e devolvem um
-DataFrame pronto para virar gráfico ou tabela. Nenhuma função imprime nada
-nem desenha nada — assim o mesmo cálculo alimenta o dashboard, o relatório
-e eventuais testes.
+DataFrame pronto para virar gráfico ou tabela. Nenhuma função imprime ou
+desenha, então o mesmo cálculo alimenta o dashboard, o relatório e os testes.
 """
 
 from __future__ import annotations
@@ -82,7 +81,7 @@ def monthly_revenue(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def revenue_by_weekday_hour(df: pd.DataFrame) -> pd.DataFrame:
-    """Matriz dia da semana x hora da compra — mostra quando o cliente compra."""
+    """Matriz dia da semana x hora da compra, que mostra quando o cliente compra."""
     orders = df.drop_duplicates("order_id")
 
     heat = (
@@ -257,7 +256,7 @@ def revenue_by_state(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def revenue_by_region(df: pd.DataFrame) -> pd.DataFrame:
-    """Mesma leitura, agregada por região — menos ruído que 27 UFs."""
+    """Mesma leitura agregada por região, com menos ruído que 27 UFs."""
     grouped = (
         df.groupby("customer_region")
         .agg(
@@ -300,7 +299,7 @@ def state_coordinates(geolocation: pd.DataFrame) -> pd.DataFrame:
 # Entrega e satisfação
 # --------------------------------------------------------------------------- #
 def delivery_vs_review(df: pd.DataFrame) -> pd.DataFrame:
-    """Nota média por faixa de prazo de entrega — o insight mais forte da base."""
+    """Nota média por faixa de prazo de entrega (o insight mais forte da base)."""
     orders = df.drop_duplicates("order_id").dropna(subset=["review_score"])
 
     bins = [0, 3, 7, 14, 21, 30, np.inf]
@@ -359,7 +358,7 @@ def review_distribution(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def delivery_evolution(df: pd.DataFrame) -> pd.DataFrame:
-    """Prazo médio e taxa de atraso mês a mês — a operação melhorou?"""
+    """Prazo médio e taxa de atraso mês a mês, para ver se a operação melhorou."""
     orders = df.drop_duplicates("order_id")
 
     return (

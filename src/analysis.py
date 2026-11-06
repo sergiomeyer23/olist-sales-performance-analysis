@@ -161,7 +161,7 @@ def top_categories_by_state(df: pd.DataFrame, top_n: int = 5) -> pd.DataFrame:
 # Vendedores
 # --------------------------------------------------------------------------- #
 def seller_ranking(df: pd.DataFrame, top_n: int = 15) -> pd.DataFrame:
-    """Ranking de vendedores por faturamento, com nota, prazo e taxa de atraso."""
+    """Ranking de vendedores com faturamento, volume, ticket médio, prazo e nota média."""
     grouped = (
         df.groupby("seller_id")
         .agg(

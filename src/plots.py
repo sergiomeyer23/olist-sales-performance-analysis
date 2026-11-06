@@ -79,7 +79,7 @@ def plot_monthly_revenue(monthly: pd.DataFrame) -> go.Figure:
     return _finish(
         fig,
         "Evolução do faturamento mensal",
-        "Crescimento consistente ao longo de 2017 e estabilização em 2018",
+        "Receita mensal dos pedidos entregues (barras) e média móvel de 3 meses (linha)",
     )
 
 
@@ -103,7 +103,11 @@ def plot_growth(monthly: pd.DataFrame) -> go.Figure:
     fig.add_hline(y=0, line_width=1, line_color="#6e7781")
     fig.update_yaxes(title="Variação vs. mês anterior (%)", ticksuffix="%")
     fig.update_xaxes(title="")
-    return _finish(fig, "Crescimento mês a mês (MoM)", "Sazonalidade forte em novembro e janeiro")
+    return _finish(
+        fig,
+        "Crescimento mês a mês (MoM)",
+        "Variação da receita mensal em relação ao mês anterior",
+    )
 
 
 def plot_weekday_hour_heatmap(heat: pd.DataFrame) -> go.Figure:
@@ -138,6 +142,8 @@ def plot_weekday_hour_heatmap(heat: pd.DataFrame) -> go.Figure:
 def plot_top_categories(categories: pd.DataFrame) -> go.Figure:
     """Barras horizontais das categorias campeãs de faturamento."""
     data = categories.sort_values("faturamento")
+    leader_share = categories["participacao"].max()
+    total_share = categories["participacao"].sum()
 
     fig = go.Figure(
         go.Bar(
@@ -162,7 +168,7 @@ def plot_top_categories(categories: pd.DataFrame) -> go.Figure:
     return _finish(
         fig,
         "Categorias com maior faturamento",
-        "Nenhuma categoria passa de 11% do total: portfólio bem distribuído",
+        f"A líder faz {leader_share:.1%} do total e as {len(categories)} maiores somam {total_share:.0%}",
     )
 
 
@@ -201,7 +207,7 @@ def plot_category_matrix(matrix: pd.DataFrame) -> go.Figure:
     return _finish(
         fig,
         "Volume x satisfação por categoria",
-        "Bolhas abaixo da linha vendem muito mas decepcionam: prioridade de melhoria",
+        "Bolhas abaixo da linha têm volume alto e nota abaixo da média: prioridade de melhoria",
     )
 
 
@@ -230,7 +236,7 @@ def plot_state_category_heatmap(top_by_state: pd.DataFrame, top_states: list[str
     return _finish(
         fig,
         "Categorias líderes nos principais estados",
-        "O mix de consumo se repete entre as UFs: estratégia nacional funciona",
+        "As mesmas categorias lideram na maioria dos estados",
     )
 
 
@@ -268,13 +274,18 @@ def plot_top_sellers(sellers: pd.DataFrame) -> go.Figure:
     return _finish(
         fig,
         "Maiores vendedores por faturamento",
-        "Cor indica a nota média: vender muito não garante cliente satisfeito",
+        "A cor indica a nota média de cada vendedor",
     )
 
 
 def plot_pareto(pareto: pd.DataFrame) -> go.Figure:
     """Curva de Pareto da concentração de faturamento entre vendedores."""
     fig = go.Figure()
+
+    total_sellers = len(pareto)
+    sellers_80 = int((pareto["participacao_acumulada"] < 0.80).sum() + 1)
+    top20_cutoff = max(1, int(round(total_sellers * 0.20)))
+    top20_share = pareto["price"].head(top20_cutoff).sum() / pareto["price"].sum()
 
     fig.add_scatter(
         x=pareto["percentual_vendedores"] * 100,
@@ -306,7 +317,8 @@ def plot_pareto(pareto: pd.DataFrame) -> go.Figure:
     return _finish(
         fig,
         "Concentração de mercado (curva de Pareto)",
-        "Os 20% maiores vendedores respondem por ~82% da receita",
+        f"{sellers_80} vendedores ({sellers_80 / total_sellers:.0%}) geram 80% da receita; "
+        f"os 20% maiores fazem {top20_share:.0%}",
     )
 
 
@@ -316,6 +328,7 @@ def plot_pareto(pareto: pd.DataFrame) -> go.Figure:
 def plot_state_bars(states: pd.DataFrame, top_n: int = 15) -> go.Figure:
     """Faturamento por UF, colorido por região."""
     data = states.head(top_n).sort_values("faturamento")
+    leader = states.sort_values("faturamento", ascending=False).iloc[0]
 
     fig = px.bar(
         data,
@@ -339,7 +352,7 @@ def plot_state_bars(states: pd.DataFrame, top_n: int = 15) -> go.Figure:
     return _finish(
         fig,
         "Faturamento por estado",
-        "São Paulo sozinho responde por 38% de toda a receita",
+        f"{leader['customer_state']} sozinho responde por {leader['participacao']:.0%} da receita",
     )
 
 
@@ -460,7 +473,7 @@ def plot_freight_by_region(freight: pd.DataFrame) -> go.Figure:
     return _finish(
         fig,
         "Peso do frete por região",
-        "No Norte e Nordeste o frete come uma fatia bem maior do valor do produto",
+        "Nas vendas interestaduais para Norte e Nordeste o frete equivale a 22% a 23% do preço",
     )
 
 
@@ -502,7 +515,7 @@ def plot_delivery_vs_review(delivery: pd.DataFrame) -> go.Figure:
     return _finish(
         fig,
         "Prazo de entrega x satisfação do cliente",
-        "Acima de 30 dias a nota despenca para 2,24 e 63% avaliam com 1 ou 2",
+        "A proporção de notas 1 e 2 sobe conforme o prazo aumenta, de 7% até 3 dias para 63% acima de 30",
     )
 
 
@@ -556,7 +569,7 @@ def plot_review_distribution(reviews: pd.DataFrame) -> go.Figure:
     return _finish(
         fig,
         "Distribuição das avaliações",
-        "Base polarizada: muita nota 5, mas um bloco relevante de nota 1",
+        "59% dos pedidos têm nota 5 e 10% têm nota 1",
     )
 
 
@@ -617,7 +630,7 @@ def plot_payment_mix(payments: pd.DataFrame) -> go.Figure:
     return _finish(
         fig,
         "Meios de pagamento",
-        "Cartão de crédito domina; boleto ainda representa ~1 em cada 5 pedidos",
+        "Cartão de crédito responde por 75% dos pedidos e o boleto por cerca de 20%",
     )
 
 
@@ -651,5 +664,5 @@ def plot_installments(installments: pd.DataFrame) -> go.Figure:
     return _finish(
         fig,
         "Parcelamento no cartão de crédito",
-        "Quanto maior o valor da compra, mais o cliente parcela",
+        "O ticket médio cresce com o número de parcelas",
     )

@@ -1,8 +1,8 @@
-"""Análise exploratória — versão narrada em script.
+"""Análise exploratória, versão narrada em script.
 
-Este arquivo é o "caderno de campo" do projeto: mostra o raciocínio passo a
+Este arquivo é o caderno de campo do projeto: mostra o raciocínio passo a
 passo, com as perguntas na ordem em que foram feitas. O código de produção
-mora em src/ e o resultado final no dashboard (app.py).
+está em src/ e o resultado final no dashboard (app.py).
 
 Pode ser executado direto (`python notebooks/01_analise_exploratoria.py`) ou
 aberto no VS Code / Jupyter, já que usa células `# %%`.
@@ -38,7 +38,7 @@ for name, value in kpis.items():
 
 # %% [markdown]
 # Leitura: R$ 13,2 milhões em 96 mil pedidos, ticket médio de R$ 137 e nota
-# média 4,08. O frete representa ~14% do valor total pago, uma fatia relevante.
+# média 4,16. O frete representa ~14% do valor total pago.
 
 # %% [markdown]
 # ## 2. A receita está crescendo?
@@ -48,10 +48,11 @@ monthly = an.monthly_revenue(df)
 print(monthly[["order_month", "faturamento", "pedidos", "ticket_medio", "crescimento_mom"]])
 
 # %% [markdown]
-# Leitura: 2017 foi de crescimento forte; 2018 estabilizou em torno de
-# R$ 900 mil/mês. O pico de nov/2017 (R$ 988 mil) é a Black Friday. Em
-# dezembro o faturamento cai: o cliente antecipa a compra de Natal porque sabe
-# que a entrega demora.
+# Leitura: 2017 teve crescimento forte; de janeiro a agosto de 2018 o
+# faturamento mensal ficou em torno de R$ 900 mil (média de R$ 902 mil). O pico
+# de nov/2017 (R$ 988 mil) é a Black Friday. Em dezembro o faturamento cai,
+# provavelmente porque o cliente antecipa a compra de Natal sabendo que a
+# entrega demora.
 
 # %% [markdown]
 # ## 3. Quando o cliente compra?
@@ -63,10 +64,10 @@ print("\nHorários de pico:")
 print(heat.nlargest(5, "pedidos")[["weekday_label", "order_hour", "pedidos"]])
 
 # %% [markdown]
-# Leitura: segunda-feira é o dia mais forte e o volume se concentra entre
-# 10h e 22h. Sábado é o pior dia. Isso sugere compra de escritório ou de
-# rotina, não de lazer de fim de semana, e é um bom argumento para concentrar
-# mídia e e-mail marketing no início da semana.
+# Leitura: segunda-feira é o dia mais forte (15,7 mil pedidos) e sábado o mais
+# fraco (10,5 mil). O volume se concentra entre 10h e 22h. Isso sugere compra de
+# rotina em dia útil, o que favorece concentrar mídia e e-mail marketing no
+# início da semana.
 
 # %% [markdown]
 # ## 4. Quais categorias sustentam a receita?
@@ -77,12 +78,14 @@ print(an.top_categories(df, top_n=10)[
 ])
 
 # %% [markdown]
-# Leitura: a maior categoria (Saúde e beleza) faz só 9,3% do total. O
-# portfólio é pulverizado, o que dilui o risco mas enfraquece a negociação com
-# fornecedores.
+# Leitura: a maior categoria (Saúde e beleza) faz 9,3% do total e as 12 maiores
+# somam 69%. Num marketplace 3P como a Olist, essa pulverização do catálogo
+# reduz a dependência de um nicho: o risco de concentração é menor. A oferta de
+# cada categoria depende dos sellers ativos nela, então o trabalho comercial é
+# prospectar e ativar sellers onde há demanda e nota baixa.
 
 # %% [markdown]
-# ### Existe categoria que vende bem e decepciona?
+# ### Existe categoria que vende bem e tem nota baixa?
 
 # %%
 matrix = an.category_matrix(df)
@@ -92,9 +95,9 @@ print(matrix.nsmallest(5, "nota_media")[
 ])
 
 # %% [markdown]
-# Leitura: Móveis de escritório (nota 3,52) e Cama, mesa e banho (3,92)
-# vendem muito e avaliam mal. São itens volumosos, com frete caro e maior
-# chance de avaria — candidatos naturais a uma revisão de embalagem e de
+# Leitura: Móveis de escritório (nota 3,65) e Cama, mesa e banho (4,00) vendem
+# muito e ficam abaixo da média geral de 4,16. São itens volumosos, com frete
+# caro e maior chance de avaria, candidatos a uma revisão de embalagem e de
 # expectativa de prazo no anúncio.
 
 # %% [markdown]
@@ -106,11 +109,9 @@ for name, value in concentration.items():
     print(f"{name:.<34} {value:,.4f}")
 
 # %% [markdown]
-# Leitura: os 10 maiores vendedores fazem apenas 13,3%, o que parece um
-# mercado pulverizado. Mas a curva inteira mostra que 18% dos vendedores geram
-# 80% da receita, um Pareto clássico. A leitura de mercado fragmentado só vale
-# para o topo absoluto; na prática, um núcleo de ~530 vendedores carrega a
-# operação.
+# Leitura: os 10 maiores vendedores fazem 13,3% da receita. A curva completa
+# mostra que 531 dos 2.945 vendedores (18%) geram 80%, e os 20% maiores fazem
+# 82%. Um núcleo de ~530 vendedores carrega a operação.
 
 # %% [markdown]
 # ## 6. Onde estão os clientes?
@@ -125,13 +126,13 @@ print("\nPor região:")
 print(an.revenue_by_region(df))
 
 # %% [markdown]
-# Leitura: o Sudeste concentra 65% da receita e SP sozinho, 38%. O contraste
-# operacional é grande: no Sudeste o pedido chega em ~10,7 dias com frete médio
-# de R$ 17; no Norte são ~22,6 dias e R$ 37 de frete. A nota acompanha:
-# 4,11 no Sudeste contra 3,91 no Nordeste.
+# Leitura: o Sudeste concentra 65% da receita (SP, RJ e MG juntos, 63%) e SP
+# sozinho, 38%. No Sudeste o pedido chega em ~10,7 dias com frete médio de
+# R$ 17; no Norte são ~22,6 dias e R$ 37 de frete. A nota média é 4,18 no
+# Sudeste e 3,97 no Nordeste, a menor entre as regiões.
 
 # %% [markdown]
-# ## 7. O insight principal: prazo de entrega x satisfação
+# ## 7. Prazo de entrega x satisfação
 
 # %%
 print(an.delivery_vs_review(df))
@@ -141,15 +142,17 @@ print(an.late_delivery_impact(df)[
 ])
 
 # %% [markdown]
-# Leitura: este é o achado mais acionável da base.
+# Leitura:
 #
-# - Entrega em até 3 dias → nota 4,48
-# - Entrega acima de 30 dias → nota 2,24, com 63% de notas 1 ou 2
-# - Pedido no prazo → 4,29; pedido atrasado → 2,57
+# - Entrega em até 3 dias: nota 4,48
+# - Entrega acima de 30 dias: nota 2,24, com 63% de notas 1 ou 2
+# - Pedido no prazo: 4,29; pedido atrasado: 2,57
 #
-# Atrasar custa 1,73 estrela. Como 46% dos pedidos atrasados recebem nota 1, o
-# atraso gera detratores ativos além de insatisfação. Apenas 8,1% dos pedidos
-# atrasam, então o problema é concentrado e, por isso mesmo, tratável.
+# Atrasar custa 1,73 estrela, e 46% dos pedidos atrasados recebem nota 1. Só
+# 8,1% dos pedidos atrasam (7.658 de 95.560 avaliados). Se esses pedidos
+# tivessem a nota média dos entregues no prazo, a nota geral subiria de 4,16
+# para 4,29. Os dados são observacionais, então esse número é uma ordem de
+# grandeza e não um efeito causal medido.
 
 # %% [markdown]
 # ## 8. Como o cliente paga?
@@ -164,7 +167,7 @@ print(an.installments_profile(df))
 # (à vista) para R$ 333 (7 a 10 parcelas). O parcelamento viabiliza a compra
 # de itens mais caros, então mexer nele afeta o ticket diretamente.
 #
-# O boleto ainda é ~20% dos pedidos, um traço bem brasileiro do dataset.
+# O boleto ainda é ~20% dos pedidos.
 
 # %% [markdown]
 # ## 9. Quanto pesa o frete?
@@ -176,22 +179,29 @@ print(an.freight_analysis(df)[
 
 # %% [markdown]
 # Leitura: no Norte o frete equivale a 22,7% do preço do produto, contra
-# 13,1% em vendas dentro do próprio estado no Sudeste. Como quase toda venda
-# para o Norte/Nordeste é interestadual (sai do Sudeste), o custo logístico
-# vira barreira de conversão nessas regiões.
+# 13,1% em vendas dentro do próprio estado no Sudeste. Quase toda venda para
+# Norte e Nordeste é interestadual: só 1,8% dos vendedores ativos estão no
+# Nordeste e 0,1% no Norte. O frete alto tende a pesar na conversão nessas
+# regiões.
 
 # %% [markdown]
 # ---
 # ## Conclusões e recomendações
 #
-# 1. O prazo é o principal fator de satisfação. Reduzir atraso vale mais que
-#    qualquer ação de marketing sobre NPS: são 1,73 estrela por pedido atrasado.
-# 2. A base de vendedores pede dois trilhos. ~530 vendedores (18%) fazem 80% da
-#    receita: gerente de conta para eles, autoatendimento para a cauda.
-# 3. Um CD no Nordeste ataca três problemas de uma vez: prazo (20 dias), frete
-#    (22% do preço) e nota (3,91, a pior do país).
-# 4. As categorias volumosas precisam de atenção. Móveis de escritório e
-#    cama/mesa/banho vendem bem e avaliam mal: revisar embalagem e prometer
-#    prazos realistas.
-# 5. A operação precisa estar pronta para novembro. A Black Friday gera o pico
-#    de receita e também o maior risco de atraso e de nota 1.
+# 1. Reduzir o atraso. Cada pedido atrasado perde 1,73 estrela, e a nota geral
+#    iria de 4,16 para 4,29 se eles tivessem a nota dos entregues no prazo. No
+#    marketplace, o atraso começa na postagem pelo seller
+#    (order_delivered_carrier_date), então vale acompanhar o cumprimento do SLA
+#    de postagem por seller.
+# 2. Dois grupos de vendedores. ~530 vendedores (18%) fazem 80% da receita:
+#    gerente de conta para eles e autoatendimento para a cauda.
+# 3. Prospectar sellers no Norte e no Nordeste. Essas regiões têm prazo de 20 a
+#    23 dias, frete de 22% a 23% do preço nas vendas interestaduais e, no
+#    Nordeste, nota 3,97. Sellers locais encurtam o trajeto, e a malha
+#    logística com cross-docking regional reduz o prazo dos que ficam no
+#    Sudeste.
+# 4. Revisar as categorias volumosas. Móveis de escritório e cama/mesa/banho têm
+#    volume alto e nota abaixo da média: revisar embalagem e prometer prazos
+#    realistas.
+# 5. Preparar a operação para novembro. Em nov/2017 a taxa de atraso foi de 14%,
+#    contra 5% em outubro, e a nota média caiu de 4,21 para 3,99.

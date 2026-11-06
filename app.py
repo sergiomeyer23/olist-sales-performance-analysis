@@ -140,7 +140,7 @@ if df.empty:
 # --------------------------------------------------------------------------- #
 st.title("Performance de vendas do Olist")
 st.caption(
-    "Análise de 96 mil pedidos entregues do maior marketplace brasileiro. "
+    "Análise de 96 mil pedidos entregues do marketplace brasileiro Olist. "
     "Use os filtros à esquerda para explorar por período, região e categoria."
 )
 
@@ -189,8 +189,8 @@ with tab_overview:
     insight(
         f"O melhor mês foi <b>{best_month['order_month']:%b/%Y}</b> com "
         f"R$ {best_month['faturamento']:,.0f}, por causa da Black Friday. "
-        "Novembro e janeiro puxam o pico; dezembro cai porque a entrega de Natal "
-        "não chega a tempo e o cliente antecipa a compra."
+        "Dezembro cai, provavelmente porque o cliente antecipa a compra de Natal "
+        "sabendo que a entrega demora."
     )
 
     col_a, col_b = st.columns(2)
@@ -203,9 +203,9 @@ with tab_overview:
         )
 
     insight(
-        "As compras se concentram entre <b>10h e 22h de segunda a sexta</b>, com o "
-        "pico na segunda-feira à noite. O fim de semana responde por bem menos "
-        "pedidos, então campanhas e e-mails rendem mais no início da semana."
+        "As compras se concentram entre <b>10h e 22h</b>. Segunda-feira é o dia com "
+        "mais pedidos (15,7 mil na base completa) e sábado o com menos (10,5 mil), "
+        "então campanhas e e-mails tendem a render mais no início da semana."
     )
 
     st.subheader("Resumo mensal")
@@ -250,8 +250,10 @@ with tab_products:
     insight(
         f"A categoria líder, {leader['category_pt']}, representa apenas "
         f"<b>{leader['participacao']:.1%}</b> do faturamento, e as 12 maiores "
-        f"somam {top_cat['participacao'].sum():.0%}. Sem dependência de uma única "
-        "categoria o risco é menor, mas o poder de negociação com fornecedores também diminui."
+        f"somam {top_cat['participacao'].sum():.0%}. Num marketplace 3P, esse catálogo "
+        "pulverizado reduz a dependência de um nicho e o risco de concentração é menor. "
+        "A oferta de cada categoria depende dos sellers ativos nela, então o trabalho "
+        "comercial é prospectar e ativar sellers onde há demanda."
     )
 
     top_states = (
@@ -263,10 +265,11 @@ with tab_products:
     )
 
     insight(
-        "As mesmas categorias (saúde e beleza, "
-        "cama/mesa/banho, relógios e presentes) lideram em praticamente todos os "
-        "estados. Isso permite um sortimento padronizado no centro de distribuição, "
-        "com ajustes finos por região em vez de catálogos regionais separados."
+        "As mesmas categorias (saúde e beleza, cama/mesa/banho, relógios e presentes) "
+        "lideram em praticamente todos os estados. Como o catálogo vem dos sellers, a "
+        "demanda é parecida em todo o país e o que muda por região é onde estão os "
+        "sellers: prospectar lojistas no Norte e no Nordeste reduz frete interestadual "
+        "e prazo para a mesma cesta de produtos."
     )
 
     st.subheader("Detalhe por categoria")
@@ -318,11 +321,10 @@ with tab_sellers:
         st.plotly_chart(plots.plot_pareto(an.market_concentration(df)), width="stretch")
 
     insight(
-        f"Nenhum vendedor domina sozinho "
-        f"(os 10 maiores fazem {headline['share_top_10_vendedores']:.1%}), mas "
-        f"<b>{headline['percentual_vendedores_para_80pct']:.0%} dos vendedores geram 80% "
-        "da receita</b>. A gestão de contas pode seguir dois trilhos: "
-        "atendimento dedicado para esse núcleo e automação ou autoatendimento para a cauda."
+        f"Os 10 maiores vendedores fazem {headline['share_top_10_vendedores']:.1%} da "
+        f"receita, e <b>{headline['percentual_vendedores_para_80pct']:.0%} dos vendedores "
+        "geram 80% dela</b>. A gestão de contas pode ter dois grupos: "
+        "atendimento dedicado para esse núcleo e autoatendimento para a cauda."
     )
 
     st.subheader("Ranking de vendedores")
@@ -356,8 +358,8 @@ with tab_sellers:
         hide_index=True,
     )
     st.caption(
-        "Atenção aos vendedores com faturamento alto e nota baixa: são os que mais "
-        "geram atrito de marca por real vendido."
+        "Vendedores com faturamento alto e nota baixa merecem um plano de ação "
+        "individual."
     )
 
 # --- Geografia -------------------------------------------------------------- #
@@ -380,8 +382,10 @@ with tab_geo:
     insight(
         f"SP, RJ e MG concentram <b>{top3_share:.0%}</b> da receita. No Norte e no "
         "Nordeste o cliente espera quase o dobro do tempo e paga um frete "
-        "proporcionalmente muito maior. Um centro de distribuição no Nordeste "
-        "atacaria prazo, frete e nota ao mesmo tempo."
+        "proporcionalmente maior, porque quase todos os sellers estão no Sudeste e no "
+        "Sul. Prospectar e integrar sellers regionais encurta o trajeto, e a malha "
+        "logística com cross-docking reduz o prazo dos pedidos que continuam saindo "
+        "do Sudeste."
     )
 
     st.subheader("Desempenho por estado")
@@ -427,14 +431,16 @@ with tab_delivery:
 
     on_time = first_value(late, ~late["is_late"], "nota_media")
     delayed = first_value(late, late["is_late"], "nota_media")
+    late_share = first_value(late, late["is_late"], "participacao", default=0.0)
 
     if on_time is not None and delayed is not None:
         insight(
             f"Pedidos entregues no prazo recebem nota média <b>{on_time:.2f}</b>; "
             f"os atrasados, <b>{delayed:.2f}</b>, uma queda de "
             f"{on_time - delayed:.2f} estrelas. Entre as entregas que passam de 30 dias, "
-            "quase dois terços das avaliações são nota 1 ou 2. O prazo é o principal "
-            "fator de satisfação de toda a base."
+            "quase dois terços das avaliações são nota 1 ou 2. Se os atrasados tivessem a "
+            f"nota dos pedidos no prazo, a nota média do recorte subiria "
+            f"{late_share * (on_time - delayed):.2f} ponto."
         )
     else:
         insight(
@@ -468,8 +474,7 @@ with tab_delivery:
     insight(
         "O cartão responde pela maior parte dos pedidos e o ticket médio cresce com o "
         "número de parcelas, o que indica que o parcelamento viabiliza a compra de "
-        "itens mais caros. Reduzir o máximo de parcelas encolheria diretamente o "
-        "ticket médio."
+        "itens mais caros. Reduzir o máximo de parcelas tende a baixar o ticket médio."
     )
 
 # --- Dados ------------------------------------------------------------------ #

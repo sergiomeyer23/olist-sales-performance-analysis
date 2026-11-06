@@ -142,7 +142,7 @@ def category_matrix(df: pd.DataFrame, min_items: int = 300) -> pd.DataFrame:
 
 
 def top_categories_by_state(df: pd.DataFrame, top_n: int = 5) -> pd.DataFrame:
-    """Top N categorias de cada estado (pergunta original do projeto)."""
+    """Top N categorias de cada estado do cliente, por faturamento."""
     grouped = (
         df.groupby(["customer_state", "category_pt"])["price"]
         .sum()
@@ -161,7 +161,7 @@ def top_categories_by_state(df: pd.DataFrame, top_n: int = 5) -> pd.DataFrame:
 # Vendedores
 # --------------------------------------------------------------------------- #
 def seller_ranking(df: pd.DataFrame, top_n: int = 15) -> pd.DataFrame:
-    """Ranking de vendedores com métricas de qualidade, não só de volume."""
+    """Ranking de vendedores por faturamento, com nota, prazo e taxa de atraso."""
     grouped = (
         df.groupby("seller_id")
         .agg(
@@ -299,7 +299,7 @@ def state_coordinates(geolocation: pd.DataFrame) -> pd.DataFrame:
 # Entrega e satisfação
 # --------------------------------------------------------------------------- #
 def delivery_vs_review(df: pd.DataFrame) -> pd.DataFrame:
-    """Nota média por faixa de prazo de entrega (o insight mais forte da base)."""
+    """Nota média e % de notas baixas por faixa de prazo de entrega."""
     orders = df.drop_duplicates("order_id").dropna(subset=["review_score"])
 
     bins = [0, 3, 7, 14, 21, 30, np.inf]
@@ -323,7 +323,7 @@ def delivery_vs_review(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def late_delivery_impact(df: pd.DataFrame) -> pd.DataFrame:
-    """Compara pedidos no prazo x atrasados (nota, % detratores, volume)."""
+    """Compara pedidos no prazo x atrasados (nota, % de notas 1 e 2, volume)."""
     orders = df.drop_duplicates("order_id").dropna(subset=["review_score"])
 
     grouped = (

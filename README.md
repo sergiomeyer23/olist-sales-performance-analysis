@@ -12,15 +12,16 @@ marketplace brasileiro Olist, feitos com Python, Pandas, Plotly e Streamlit.
 
 | # | Descoberta | Número |
 |---|-----------|--------|
-| 1 | Atraso na entrega derruba a avaliação, o achado mais acionável da base | Nota 4,29 no prazo, 2,57 atrasado |
-| 2 | Pareto entre vendedores: o topo não domina, mas o núcleo sim | 18% dos vendedores geram 80% da receita |
+| 1 | Pedidos atrasados recebem nota muito menor | Nota 4,29 no prazo, 2,57 atrasado |
+| 2 | Pareto entre vendedores: os 10 maiores fazem 13,3% da receita e 531 vendedores fazem 80% | 18% dos vendedores geram 80% da receita |
 | 3 | Concentração geográfica no Sudeste | SP, RJ e MG = 63% da receita |
 | 4 | Vender longe custa caro: frete e prazo penalizam o Norte e o Nordeste | Frete = 22,7% do preço no Norte, contra 13,1% no Sudeste (mesmo estado) |
 | 5 | O parcelamento sustenta o ticket | R$ 101 à vista, R$ 333 em 7 a 10x |
 
-Na leitura de negócio, logística é o produto. Só 8,1% dos pedidos atrasam, mas
-46% deles recebem nota 1. O problema é concentrado e, por isso, tratável.
-Reduzir atraso vale mais para o NPS do que qualquer campanha de marketing.
+Só 8,1% dos pedidos atrasam, mas 46% deles recebem nota 1. Se os pedidos
+atrasados tivessem a nota média dos entregues no prazo, a nota geral subiria de
+4,16 para 4,29. A correlação não prova causa, mas o tamanho da diferença justifica
+tratar o prazo como prioridade.
 
 ## Dashboard interativo
 
@@ -45,21 +46,21 @@ faixa de preço:
 ### Prazo de entrega x satisfação
 ![Prazo vs nota](outputs/figuras/12_prazo_vs_nota.png)
 
-Cada faixa de atraso derruba a nota. Acima de 30 dias, 63% das avaliações são 1 ou 2.
+A nota cai a cada faixa de prazo. Acima de 30 dias, 63% das avaliações são 1 ou 2.
 
 ### Evolução do faturamento
 ![Faturamento mensal](outputs/figuras/01_faturamento_mensal.png)
 
-O faturamento cresceu forte em 2017 e se estabilizou em ~R$ 900 mil/mês em 2018.
-O pico de nov/2017 é a Black Friday. Em dezembro o faturamento cai, porque o
-cliente antecipa a compra de Natal sabendo que a entrega demora.
+O faturamento cresceu forte em 2017 e ficou em torno de R$ 900 mil por mês em
+2018 (média de R$ 902 mil de janeiro a agosto). O pico de nov/2017 (R$ 988 mil) é
+a Black Friday. Em dezembro o faturamento cai, provavelmente porque o cliente
+antecipa a compra de Natal sabendo que a entrega demora.
 
 ### Concentração de mercado (Pareto)
 ![Pareto](outputs/figuras/08_pareto_vendedores.png)
 
-Os 10 maiores vendedores fazem só 13,3% da receita, o que parece pulverizado. A
-curva completa mostra um Pareto clássico: 531 vendedores (18%) geram 80% do
-faturamento.
+Os 10 maiores vendedores fazem 13,3% da receita, mas 531 vendedores (18% dos
+2.945 ativos) geram 80% do faturamento. Os 20% maiores respondem por 82%.
 
 ### Receita e prazo pelo Brasil
 ![Mapa](outputs/figuras/10b_mapa_brasil_estatico.png)
@@ -70,9 +71,9 @@ entrega e menor a receita. (No dashboard este mapa é interativo, com tiles reai
 ### Volume x satisfação por categoria
 ![Matriz de categorias](outputs/figuras/05_matriz_categorias.png)
 
-As categorias abaixo da linha vendem muito e decepcionam, então são prioridade de
-melhoria. Móveis de escritório (nota 3,52) e cama, mesa e banho (3,92) lideram
-esse grupo: itens volumosos, com frete caro e maior risco de avaria.
+As categorias abaixo da linha vendem muito e têm nota baixa, então são prioridade
+de melhoria. Móveis de escritório (nota 3,65) e cama, mesa e banho (4,00) estão
+nesse grupo. São itens volumosos, com frete caro e maior risco de avaria.
 
 > As 17 figuras em PNG e 18 em HTML interativo estão em [`outputs/figuras/`](outputs/figuras)
 > e as tabelas de resumo em [`outputs/tabelas/`](outputs/tabelas).
@@ -163,16 +164,21 @@ Granularidade final: uma linha = um item vendido e entregue (109.872 linhas).
 
 ## Recomendações de negócio
 
-1. Atacar o atraso antes de qualquer outra coisa. 8,1% dos pedidos atrasam e
-   perdem 1,73 estrela cada, o maior ganho de NPS disponível.
-2. Gerir vendedores em dois trilhos. Conta dedicada para os ~530 que fazem 80% da
+1. Reduzir o atraso. Os 8,1% de pedidos atrasados perdem 1,73 estrela cada. Com
+   a nota dos pedidos no prazo, a nota geral iria de 4,16 para 4,29. No marketplace
+   o atraso nasce em duas etapas, a postagem pelo seller (`order_delivered_carrier_date`)
+   e o transporte até o cliente. Vale acompanhar o SLA de postagem por seller.
+2. Gerir vendedores em dois grupos. Conta dedicada para os ~530 que fazem 80% da
    receita; autoatendimento e automação para a cauda longa.
-3. Abrir um centro de distribuição no Nordeste. Ele ataca ao mesmo tempo o prazo
-   (20 dias), o frete (22% do preço) e a nota (3,91, a pior do país).
-4. Revisar as categorias volumosas. Móveis e cama/mesa/banho vendem bem e avaliam
-   mal: embalagem melhor e prazo realista no anúncio.
-5. Preparar a operação para novembro. A Black Friday é o pico de receita e também
-   o momento em que o risco de atraso (e de nota 1) mais cresce.
+3. Prospectar sellers no Norte e no Nordeste. Só 1,8% dos vendedores ativos estão
+   no Nordeste e 0,1% no Norte, e as duas regiões têm prazo de 20 a 23 dias, frete
+   de 22% a 23% do preço nas vendas interestaduais e nota de 3,97 no Nordeste, a
+   menor do país. Sellers locais encurtam o trajeto, e a malha logística com
+   cross-docking regional reduz o prazo dos que continuam no Sudeste.
+4. Revisar as categorias volumosas. Móveis de escritório e cama, mesa e banho têm
+   volume alto e nota abaixo da média: embalagem melhor e prazo realista no anúncio.
+5. Preparar a operação para novembro. Em nov/2017 a taxa de atraso foi de 14%,
+   contra 5% em outubro, e a nota média caiu de 4,21 para 3,99.
 
 ## Limitações
 
